@@ -408,6 +408,11 @@ func handleCommand(params *fryatogParams, c chan string) {
 		c <- flipCoin(message)
 		return
 
+	case cardTokens[0] == "createEvent":
+		log.Debug("Creating an event")
+		c <- createEvent(cardTokens)
+		return
+
 	case ruleRegexp.MatchString(message),
 		strings.HasPrefix(message, "def "),
 		strings.HasPrefix(message, "define "):
@@ -515,7 +520,7 @@ func handleCommand(params *fryatogParams, c chan string) {
 		log.Debug("Asked for redirecting a user to rules")
 		c <- sendRulesRedirectText(cardTokens)
 		return
-
+		
 	default:
 		log.Debug("I think it's a card")
 		if card, err := findCard(cardTokens, false, params.cardGetFunction); err == nil {
@@ -635,6 +640,10 @@ func getRandomCard(cardTokens []string, randomCardGetFunction RandomCardGetter) 
 		return card, nil
 	}
 	return Card{}, fmt.Errorf("Error retrieving random card")
+}
+
+func createEvent(cardTokens) {
+	return "<!date^1795921200^{date_long_pretty} at {time}|November 29th, 2026, 11AM GMT+8>"
 }
 
 func main() {
